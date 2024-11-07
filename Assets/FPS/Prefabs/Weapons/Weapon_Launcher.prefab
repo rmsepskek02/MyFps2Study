@@ -156,6 +156,15 @@ MonoBehaviour:
     CrosshairColor: {r: 0.006026864, g: 1, b: 0, a: 1}
   aimZoomRatio: 0.5
   aimOffset: {x: 0, y: 0.12, z: 0}
+  shootType: 3
+  maxAmmo: 8
+  delayBetweenShots: 0.5
+  weaponMuzzle: {fileID: 2749496858225023403}
+  muzzleFlashPrefab: {fileID: 0}
+  shootSfx: {fileID: 8300000, guid: 9840e254532992443a3a54073b5bad5b, type: 3}
+  recoilForce: 0.5
+  projectilePrefab: {fileID: -5833621216408935054, guid: 0e23901b938cf4f4eb86850d912715eb,
+    type: 3}
 --- !u!1 &2990922162098100101
 GameObject:
   m_ObjectHideFlags: 0
