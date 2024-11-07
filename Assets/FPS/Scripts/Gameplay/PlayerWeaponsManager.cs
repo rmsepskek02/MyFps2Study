@@ -47,7 +47,7 @@ namespace Unity.FPS.Gameplay
 
         public Transform defaultWeaponPostion;
         public Transform downWeaponPostion;
-        public Transform aimingWeaponPostion;
+        public Transform aimingWeaponPosition;
 
         private int weaponSwitchNewIndex;           //새로 바뀌는 무기 인덱스
 
@@ -61,7 +61,7 @@ namespace Unity.FPS.Gameplay
         //조준
         //카메라
         private PlayerCharacterController playerCharacterController;
-        [SerializeField] public float defaulfFov = 60f;                              //카메라 기본 FOV 값
+        [SerializeField] public float defaultFov = 60f;                              //카메라 기본 FOV 값
         [SerializeField] public float weaponFovMultiplier = 1f;                      //FOV 연산 계수
 
         public bool IsAiming { get; private set; }                  //무기 조준 여부
@@ -107,7 +107,7 @@ namespace Unity.FPS.Gameplay
             OnScopedWeapon += OnScope;
             OffScopedWeapon += OffScope;
             //Fov 초기값 설정
-            SetFov(defaulfFov);
+            SetFov(defaultFov);
 
             //지급 받은 무기 장착
             foreach (var weapon in startingWeapons)
@@ -196,21 +196,22 @@ namespace Unity.FPS.Gameplay
                 // 조준시: 디폴트 -> Aming 위치로 이동, fov: 디폴트 -> aimZoomRatio
                 if (IsAiming && activeWeapon != null)
                 {
-                    weaponMainLocalPosition = Vector3.Lerp(weaponMainLocalPosition, aimingWeaponPostion.localPosition + activeWeapon.aimOffset, Time.deltaTime * aimingAnimationSpeed);
-                    float fov = Mathf.Lerp(playerCharacterController.PlayerCamera.fieldOfView, activeWeapon.aimZoomRatio * defaulfFov, Time.deltaTime * aimingAnimationSpeed);
-
+                    weaponMainLocalPosition = Vector3.Lerp(weaponMainLocalPosition, aimingWeaponPosition.localPosition + activeWeapon.aimOffset, Time.deltaTime * aimingAnimationSpeed);
+                    //저격 모드 시작
                     if (isScopeOn)
                     {
-                        float dist = Vector3.Distance(weaponMainLocalPosition, aimingWeaponPostion.localPosition + activeWeapon.aimOffset);
-                        if(dist < distanceOnScope)
+                        //weaponMainLocalPosition, 목표지점까지의 거리를 구한다
+                        float dist = Vector3.Distance(weaponMainLocalPosition, aimingWeaponPosition.localPosition + activeWeapon.aimOffset);
+                        if (dist < distanceOnScope)
                         {
                             OnScopedWeapon?.Invoke();
                             isScopeOn = false;
-                            SetFov(fov);
                         }
                     }
                     else
                     {
+                        float fov = Mathf.Lerp(playerCharacterController.PlayerCamera.fieldOfView,
+                            activeWeapon.aimZoomRatio * defaultFov, aimingAnimationSpeed * Time.deltaTime);
                         SetFov(fov);
                     }
                 }
@@ -218,7 +219,7 @@ namespace Unity.FPS.Gameplay
                 else
                 {
                     weaponMainLocalPosition = Vector3.Lerp(weaponMainLocalPosition, defaultWeaponPostion.localPosition, Time.deltaTime * aimingAnimationSpeed);
-                    float fov = Mathf.Lerp(playerCharacterController.PlayerCamera.fieldOfView, defaulfFov, Time.deltaTime * aimingAnimationSpeed);
+                    float fov = Mathf.Lerp(playerCharacterController.PlayerCamera.fieldOfView, defaultFov, Time.deltaTime * aimingAnimationSpeed);
                     SetFov(fov);
                 }
             }
