@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Unity.FPS.Game
 {
     /// <summary>
-    /// 죽었을때 Health를 가진 오브젝트를 킬하는 오브젝트
+    /// 죽었을때 Health를 가진 오브젝트를 킬하는 클래스
     /// </summary>
     public class Destructable : MonoBehaviour
     {
@@ -13,13 +11,13 @@ namespace Unity.FPS.Game
         private Health health;
         #endregion
 
-        // Start is called before the first frame update
-        void Start()
+        private void Start()
         {
+            //참조
             health = GetComponent<Health>();
-
             DebugUtility.HandleErrorIfNullGetComponent<Health, Destructable>(health, this, gameObject);
 
+            //UnityAction 함수 등록
             health.OnDamaged += OnDamaged;
             health.OnDie += OnDie;
         }
@@ -29,14 +27,9 @@ namespace Unity.FPS.Game
             //TODO : 데미지 효과 구현
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
         void OnDie()
         {
+            //킬
             Destroy(gameObject);
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine.Events;
 namespace Unity.FPS.Game
 {
     /// <summary>
-    /// 발사체의 기본이 되는 부모클래스
+    /// 발사체의 기본이 되는 부모 클래스
     /// </summary>
     public abstract class ProjectileBase : MonoBehaviour
     {
@@ -13,20 +13,21 @@ namespace Unity.FPS.Game
         public Vector3 InitialPosition { get; private set; }
         public Vector3 InitialDirection { get; private set; }
         public Vector3 InheritedMuzzleVelocity { get; private set; }
-        public float InitailCharge { get; private set; }
+        public float InitialCharge { get; private set; }
 
-        public UnityAction OnShoot;                     //발사한 등록된 함수 호출
+        public UnityAction OnShoot;                     //발사시 등록된 함수 호출
         #endregion
 
         public void Shoot(WeaponController controller)
         {
+            //초기화
             Owner = controller.Owner;
             InitialPosition = this.transform.position;
             InitialDirection = this.transform.forward;
             InheritedMuzzleVelocity = controller.MuzzleWorldVelocity;
-            InitailCharge = controller.CurrentCharge;
+            InitialCharge = controller.CurrentCharge;
 
-            OnShoot.Invoke();
+            OnShoot?.Invoke();
         }
     }
 }

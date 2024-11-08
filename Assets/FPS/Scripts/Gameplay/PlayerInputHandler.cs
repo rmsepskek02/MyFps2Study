@@ -24,7 +24,7 @@ namespace Unity.FPS.Gameplay
         private bool aimInputWasHeld = false;
 
         void Start()
-        {
+        {   
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -109,7 +109,7 @@ namespace Unity.FPS.Gameplay
         }
 
         public bool GetCrouchInputDown()
-        {
+        {            
             /*if (CanProcessInput())
             {
                 return Input.GetButtonDown(GameConstants.k_ButtonNameCrouch);
@@ -138,11 +138,12 @@ namespace Unity.FPS.Gameplay
             return false;
         }
 
+        //무기 교체
         public int GetSwitchWeaponInput()
         {
             if (CanProcessInput())
             {
-                if (Input.GetAxis(GameConstants.k_AxisNameNextWeapon) > 0f)
+                if(Input.GetAxis(GameConstants.k_AxisNameNextWeapon) > 0f)
                 {
                     return 1;
                 }
@@ -152,19 +153,40 @@ namespace Unity.FPS.Gameplay
                 }
                 else if (Input.GetAxis(GameConstants.k_MouseAxisNameScrollWheel) > 0f)
                 {
-                    return 1;
+                    return -1;
                 }
                 else if (Input.GetAxis(GameConstants.k_MouseAxisNameScrollWheel) < 0f)
                 {
-                    return -1;
+                    return 1;
                 }
             }
 
             return 0;
         }
 
+        //조준 시작
+        public bool GetAimInputDown()
+        {
+            if (CanProcessInput())
+            {
+                return GetAimInputHeld() == true && aimInputWasHeld == false;
+            }
 
-        //조준 - 마우스 우클릭하는 동안 
+            return false;
+        }
+
+        //조준 끝
+        public bool GetAimInputUp()
+        {
+            if (CanProcessInput())
+            {
+                return GetAimInputHeld() == false && aimInputWasHeld == true;
+            }
+
+            return false;
+        }
+
+        //조준 - 마우스 우클릭하는 동안
         public bool GetAimInputHeld()
         {
             if (CanProcessInput())
@@ -175,24 +197,29 @@ namespace Unity.FPS.Gameplay
             return false;
         }
 
+        //파이어 버튼 누르기 시작
         public bool GetFireInputDown()
         {
             if (CanProcessInput())
             {
-                //return Input.GetButtonDown(GameConstants.k_ButtonNameFire);
                 return GetFireInputHeld() == true && fireInputWasHeld == false;
+                //return Input.GetButtonDown(GameConstants.k_ButtonNameFire);
             }
             return false;
         }
-        public bool GetFireInputReleased()
+
+        //파이어 버튼 누르기 끝
+        public bool GetFireInputUp()
         {
             if (CanProcessInput())
             {
-                //return Input.GetButtonUp(GameConstants.k_ButtonNameFire);
                 return GetFireInputHeld() == false && fireInputWasHeld == true;
+                //return Input.GetButtonUp(GameConstants.k_ButtonNameFire);
             }
             return false;
         }
+
+        //파이어 버튼 누르는 중
         public bool GetFireInputHeld()
         {
             if (CanProcessInput())
@@ -202,24 +229,6 @@ namespace Unity.FPS.Gameplay
             return false;
         }
 
-        //조준 시작
-        public bool GetAimInputDown()
-        {
-            if (CanProcessInput())
-            {
-                return GetAimInputHeld() == true && aimInputWasHeld == false;
-            }
-            return false;
-        }
 
-        //조준 해제
-        public bool GetAimInputUp()
-        {
-            if (CanProcessInput())
-            {
-                return GetAimInputHeld() == false && aimInputWasHeld == true;
-            }
-            return false;
-        }
     }
 }

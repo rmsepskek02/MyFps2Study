@@ -108,7 +108,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2225486910712267856}
   - component: {fileID: 8090847488450120274}
-  - component: {fileID: 2711079805849051950}
+  - component: {fileID: 8345850323311972832}
   m_Layer: 6
   m_Name: Weapon_Shotgun
   m_TagString: Untagged
@@ -230,7 +230,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2711079805849051950
+--- !u!114 &8345850323311972832
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -239,31 +239,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 2225486910712267859}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7eb9ee511296b8642b8eaf08654f7b40, type: 3}
+  m_Script: {fileID: 11500000, guid: 78260434ba86ecb42a417fdcb2373d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weaponRoot: {fileID: 1505447205160222267}
-  switchWeaponSfx: {fileID: 8300000, guid: 5649f3460b7221b46a392b1896eb6248, type: 3}
-  crosshairDefault:
-    CrosshairSprite: {fileID: 21300000, guid: 32387b1901623e14d8e64e6ea3c7f6e5, type: 3}
-    CrosshairSize: 40
-    CrosshairColor: {r: 0, g: 1, b: 0.98136926, a: 1}
-  crosshairTargetInSight:
-    CrosshairSprite: {fileID: 21300000, guid: 32387b1901623e14d8e64e6ea3c7f6e5, type: 3}
-    CrosshairSize: 30
-    CrosshairColor: {r: 0, g: 0.754717, b: 0.7487977, a: 1}
-  aimZoomRatio: 0.7
-  aimOffset: {x: 0.004, y: 0.16, z: 0}
-  shootType: 1
+  switchWeaponSfx: {fileID: 8300000, guid: 2150c7cdca78a7f4e8f0f4a7a70e1d86, type: 3}
+  shootType: 0
   maxAmmo: 8
   delayBetweenShots: 0.5
   weaponMuzzle: {fileID: 8334323006752503713}
   muzzleFlashPrefab: {fileID: 748781637555137343, guid: 4f5d4e5eaa0e5104791549cea3dc3f23,
     type: 3}
-  shootSfx: {fileID: 8300000, guid: 17b0559e7977ccb4bae513ee923fbaff, type: 3}
+  shootSfx: {fileID: 8300000, guid: dfbaec87f1798684ea15da4db161e1ae, type: 3}
+  crosshairDefault:
+    CrossHairSprite: {fileID: 21300000, guid: a8598982313764348be094114815eb05, type: 3}
+    CrossHairSize: 40
+    CrossHairColor: {r: 0, g: 1, b: 0.85924864, a: 1}
+  crosshairTargetInSight:
+    CrossHairSprite: {fileID: 21300000, guid: a8598982313764348be094114815eb05, type: 3}
+    CrossHairSize: 30
+    CrossHairColor: {r: 0, g: 0.77265453, b: 1, a: 1}
+  aimZoomRatio: 0.7
+  aimOffset: {x: 0, y: 0.13, z: 0}
   recoilForce: 0.5
-  projectilePrefab: {fileID: -1229124837596359745, guid: f05c7e6fbbfbe824388456bb4abff9d4,
+  projectilePrefab: {fileID: 4805732695468578066, guid: f05c7e6fbbfbe824388456bb4abff9d4,
     type: 3}
+  bulletsPerShot: 24
+  bulletSpreadAngle: 10
 --- !u!1 &2867801751256125023
 GameObject:
   m_ObjectHideFlags: 0

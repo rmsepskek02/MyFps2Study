@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 106790115311484948}
   - component: {fileID: 106790115311484949}
   - component: {fileID: 106790115311484954}
-  - component: {fileID: -5833621216408935054}
+  - component: {fileID: 3274817856681570123}
   m_Layer: 0
   m_Name: Projectile_Disc
   m_TagString: Untagged
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-5833621216408935054
+--- !u!114 &3274817856681570123
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,9 +94,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 106790115311484953}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 265ef1a4df15c9e4895342aeb0a33d0c, type: 3}
+  m_Script: {fileID: 11500000, guid: ce3940a4faba2ae4999e546000ca1c96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 30
+  gravityDown: 10
+  root: {fileID: 106790115311484948}
+  tip: {fileID: 106790115311484948}
+  hittableLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  impackVfxPrefab: {fileID: 4260779743739990948, guid: bbe6bdea7cd168e428a309e9eb2e728b,
+    type: 3}
+  impactVfxLifeTime: 5
+  impactSfxClip: {fileID: 8300000, guid: 7d30b1415365653459bc76871e0b0545, type: 3}
 --- !u!1 &1945832826066038730
 GameObject:
   m_ObjectHideFlags: 0

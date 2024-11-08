@@ -1,32 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.FPS.Gameplay;
 using UnityEngine;
 
-public class ScopeUIManager : MonoBehaviour
+namespace Unity.FPS.UI
 {
-    public GameObject scopeUI;
-    private PlayerWeaponsManager pw;
-    // Start is called before the first frame update
-    void Start()
+    public class ScopeUIManager : MonoBehaviour
     {
-        pw = FindObjectOfType<PlayerWeaponsManager>();
-        pw.OnScopedWeapon += OnScope;
-        pw.OffScopedWeapon += OffScope;
-    }
+        #region Variables
+        public GameObject scopeUI;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        private PlayerWeaponsManager weaponsManager;
+        #endregion
 
-    public void OnScope()
-    {
-        scopeUI.SetActive(true);
-    }
-    public void OffScope()
-    {
-        scopeUI.SetActive(false);
+        private void Start()
+        {
+            //참조
+            weaponsManager = GameObject.FindObjectOfType<PlayerWeaponsManager>();
+            //Action 함수 등록
+            weaponsManager.OnScopedWeapon += OnScope;
+            weaponsManager.OffScopedWeapon += OffScope;
+        }
+
+        public void OnScope()
+        {
+            scopeUI.SetActive(true);
+        }
+
+        public void OffScope()
+        { 
+            scopeUI.SetActive(false);
+        }
     }
 }
