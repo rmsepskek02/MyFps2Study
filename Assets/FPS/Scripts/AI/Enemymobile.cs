@@ -31,6 +31,9 @@ namespace Unity.FPS.AI
 
         private AudioSource audioSource;
 
+        //데미지 - 이펙트
+        public ParticleSystem[] randomHitSparks;
+
         //animation parameter
         const string k_AnimAttackParameter = "Attack";
         const string k_AnimMoveSpeedParameter = "MoveSpeed";
@@ -54,7 +57,13 @@ namespace Unity.FPS.AI
         // Update is called once per frame
         void Update()
         {
+            //상태구현
             UpdateCurrentAiState();
+
+            //속도에 따른 애니/사운드 효과
+            float moveSpeed = enemyController.Agent.velocity.magnitude;
+            animator.SetFloat(k_AnimMoveSpeedParameter, moveSpeed);
+            audioSource.pitch = pitchMovementSpeed.GetValueFromRatio(moveSpeed/enemyController.Agent.speed);
         }
 
         //상태에 따른 Enemy 구현
@@ -71,12 +80,19 @@ namespace Unity.FPS.AI
                 case AIState.Follow:
                     break;
             }
-
         }
 
         private void OnDamaged()
         {
+            //스파크 파티클
+            if(randomHitSparks.Length > 0)
+            {
+                int random = Random.Range(0, randomHitSparks.Length);
+                randomHitSparks[random].Play();
+            }
 
+            //데미지 애니
+            animator.SetTrigger(k_AnimOnDamagedParameter);
         }
     }
 }
