@@ -1,27 +1,30 @@
 using UnityEngine;
 using Unity.FPS.Game;
 
-/// <summary>
-/// 충전용 발사체를 발사할때 충전량에 발사체의 게임오브젝트 크기 결정
-/// </summary>
-public class ChargedProjectileEffectHandler : MonoBehaviour
+namespace Unity.FPS.Gameplay
 {
-    #region Variables
-    private ProjectileBase projectileBase;
-
-    public GameObject charageObejct;
-    public MinMaxVector3 scale;
-    #endregion
-
-    private void OnEnable()
+    /// <summary>
+    /// 충전용 발사체를 발사할때 충전량에 발사체의 게임오브젝트 크기 결정
+    /// </summary>
+    public class ChargedProjectileEffectHandler : MonoBehaviour
     {
-        //참조
-        projectileBase = GetComponent<ProjectileBase>();
-        projectileBase.OnShoot += OnShoot;
-    }
+        #region Variables
+        private ProjectileBase projectileBase;
 
-    void OnShoot()
-    {
-        charageObejct.transform.localScale = scale.GetValueFromRatio(projectileBase.InitialCharge);
+        public GameObject charageObejct;
+        public MinMaxVector3 scale;
+        #endregion
+
+        private void OnEnable()
+        {
+            //참조
+            projectileBase = GetComponent<ProjectileBase>();
+            projectileBase.OnShoot += OnShoot;
+        }
+
+        void OnShoot()
+        {
+            charageObejct.transform.localScale = scale.GetValueFromRatio(projectileBase.InitialCharge);
+        }
     }
 }

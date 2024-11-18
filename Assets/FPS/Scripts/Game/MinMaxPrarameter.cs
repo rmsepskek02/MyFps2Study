@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Unity.FPS.Game
 {
     /// <summary>
-    /// ratio 매개변수로 받아 Float의 Min에서 Max 사이의 Lerp 값 반환
+    /// ratio매개 변수로 받아 Float의 Min에서 Max 사이의 Lerp 값 반환 
     /// </summary>
     [System.Serializable]
     public struct MinMaxFloat
@@ -18,8 +16,9 @@ namespace Unity.FPS.Game
             return Mathf.Lerp(Min, Max, ratio);
         }
     }
+
     /// <summary>
-    /// ratio 매개변수로 받아 Color의 Min에서 Max 사이의 Lerp 값 반환
+    /// ratio매개 변수로 받아 Color의 Min에서 Max 사이의 Lerp 값 반환 
     /// </summary>
     [System.Serializable]
     public struct MinMaxColor
@@ -34,7 +33,7 @@ namespace Unity.FPS.Game
     }
 
     /// <summary>
-    /// ratio 매개변수로 받아 Vector3의 Min에서 Max 사이의 Lerp 값 반환
+    /// ratio매개 변수로 받아 Vector3의 Min에서 Max 사이의 Lerp 값 반환 
     /// </summary>
     [System.Serializable]
     public struct MinMaxVector3
@@ -47,4 +46,5 @@ namespace Unity.FPS.Game
             return Vector3.Lerp(Min, Max, ratio);
         }
     }
+
 }
