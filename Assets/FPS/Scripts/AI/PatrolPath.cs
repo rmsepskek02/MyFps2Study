@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.FPS.Game;
 using UnityEngine;
 
 namespace Unity.FPS.AI
@@ -18,10 +19,12 @@ namespace Unity.FPS.AI
         private void Start()
         {
             //등록된 enemy에게 패트롤할 패스(this) 지정
-            foreach (var enemy in enemiesToAssign)
-            {
-                enemy.PatrolPath = this;
-            }
+            //foreach (var enemy in enemiesToAssign)
+            //{
+            //    enemy.PatrolPath = this;
+            //}
+
+            SpawnManager.OnSpawn += AssignPath;
         }
 
         //특정(enemy) 위치로 부터 지정된 WayPoint와의 거리 구하기
@@ -48,7 +51,10 @@ namespace Unity.FPS.AI
             return wayPoints[wayPointIndex].position;
         }
 
-
+        private void AssignPath(EnemyController newEnemy)
+        {
+            newEnemy.PatrolPath = this;
+        }
 
         //기즈모로 Path 그리기
         private void OnDrawGizmosSelected()
