@@ -9,16 +9,15 @@ namespace Unity.FPS.Game
     public class Health : MonoBehaviour
     {
         #region Variables
-        [SerializeField] private float maxHealth = 100f;    //최대 Hp
+        [SerializeField] protected float maxHealth = 100f;    //최대 Hp
         public float CurrentHealth { get; private set; }    //현재 Hp
-        private bool isDeath = false;                       //죽음 체크
-
+        protected bool isDeath = false;                       //죽음 체크
         public UnityAction<float, GameObject> OnDamaged;
         public UnityAction OnDie;
         public UnityAction<float> OnHeal;
 
         //체력 위험 경계율
-        [SerializeField] private float criticalHealRatio = 0.3f;
+        [SerializeField] protected float criticalHealRatio = 0.3f;
 
         //무적
         public bool Invincible { get; private set; }
@@ -32,7 +31,7 @@ namespace Unity.FPS.Game
         public bool IsCritical() => GetRatio() <= criticalHealRatio;
 
 
-        private void Start()
+        protected virtual void Start()
         {
             //초기화
             CurrentHealth = maxHealth;
@@ -80,7 +79,7 @@ namespace Unity.FPS.Game
         }
 
         //죽음 처리 관리
-        void HandleDeath()
+        protected virtual void HandleDeath()
         {
             //죽음 체크
             if (isDeath)
@@ -89,7 +88,6 @@ namespace Unity.FPS.Game
             if(CurrentHealth <= 0f)
             {
                 isDeath = true;
-
                 //죽음 구현
                 OnDie?.Invoke();
             }

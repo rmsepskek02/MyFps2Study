@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Unity.FPS.AI
 {
     /// <summary>
-    /// Enemy 상태  
+    /// EnemyMobile 상태  
     /// </summary>
-    public enum AIState
+    public enum AIMobileState
     {
         Patrol,
         Follow,
@@ -22,7 +22,7 @@ namespace Unity.FPS.AI
         public Animator animator;
         private EnemyController enemyController;
 
-        public AIState AiState { get; private set; }
+        public AIMobileState AiMobileState { get; private set; }
 
         //이동
         public AudioClip movementSound;
@@ -63,14 +63,14 @@ namespace Unity.FPS.AI
             audioSource.Play();
 
             //초기화
-            AiState = AIState.Patrol;
+            AiMobileState = AIMobileState.Patrol;
         }
 
         private void Update()
         {
             //상태 변경/구현
-            UpdateAiStateTransition();
-            UpdateCurrentAiState();
+            UpdateAiMobileStateTransition();
+            UpdateCurrentAiMobileState();
 
             //속도에 따른 애니/사운드 효과
             float moveSpeed = enemyController.Agent.velocity.magnitude;
@@ -79,20 +79,20 @@ namespace Unity.FPS.AI
         }
 
         //상태에 따른 Enemy 구현
-        private void UpdateCurrentAiState()
+        private void UpdateCurrentAiMobileState()
         {
-            switch (AiState)
+            switch (AiMobileState)
             {
-                case AIState.Patrol:
+                case AIMobileState.Patrol:
                     enemyController.UpdatePathDestination(true);
                     enemyController.SetNavDestination(enemyController.GetDestinationOnPath());
                     break;
-                case AIState.Follow:
+                case AIMobileState.Follow:
                     enemyController.SetNavDestination(enemyController.KnonwDetectedTarget.transform.position);
                     enemyController.OrientToward(enemyController.KnonwDetectedTarget.transform.position);
                     enemyController.OrientWeaponsToward(enemyController.KnonwDetectedTarget.transform.position);
                     break;
-                case AIState.Attack:
+                case AIMobileState.Attack:
                     //일정거리까지는 이동하면서 공격
                     float distance = Vector3.Distance(enemyController.KnonwDetectedTarget.transform.position, enemyController.DetectionModule.detectionSourcePoint.position);
                     if(distance >= enemyController.DetectionModule.attackRange * attackSkipDistanceRatio)
@@ -111,23 +111,23 @@ namespace Unity.FPS.AI
         }
 
         //상태 변경에 따른 구현
-        private void UpdateAiStateTransition()
+        private void UpdateAiMobileStateTransition()
         {
-            switch (AiState)
+            switch (AiMobileState)
             {
-                case AIState.Patrol:
+                case AIMobileState.Patrol:
                     break;
-                case AIState.Follow:
+                case AIMobileState.Follow:
                     if (enemyController.IsSeeingTarget && enemyController.IsTargetInAttackRange)
                     {
-                        AiState = AIState.Attack;
+                        AiMobileState = AIMobileState.Attack;
                         enemyController.SetNavDestination(transform.position);  //정지
                     }
                     break;
-                case AIState.Attack:
+                case AIMobileState.Attack:
                     if (enemyController.IsTargetInAttackRange == false)
                     {
-                        AiState = AIState.Follow;
+                        AiMobileState = AIMobileState.Follow;
                     }
                     break;
             }
@@ -149,9 +149,9 @@ namespace Unity.FPS.AI
         private void OnDetected()
         {
             //상태 변경
-            if (AiState == AIState.Patrol)
+            if (AiMobileState == AIMobileState.Patrol)
             {
-                AiState = AIState.Follow;
+                AiMobileState = AIMobileState.Follow;
             }
 
 
@@ -174,9 +174,9 @@ namespace Unity.FPS.AI
         private void OnLost()
         {
             //상태변경
-            if (AiState == AIState.Follow || AiState == AIState.Attack)
+            if (AiMobileState == AIMobileState.Follow || AiMobileState == AIMobileState.Attack)
             {
-                AiState = AIState.Patrol;
+                AiMobileState = AIMobileState.Patrol;
             }
             //Vfx
             for (int i = 0; i < detectedVfxs.Length; i++)

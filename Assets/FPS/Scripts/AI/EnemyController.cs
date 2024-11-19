@@ -171,8 +171,10 @@ namespace Unity.FPS.AI
 
         private void OnDamaged(float damage, GameObject damageSource)
         {
+            Debug.Log("Test0");
             if (damageSource && damageSource.GetComponent<EnemyController>() == null)
             {
+                Debug.Log("Test1");
                 //등록된 함수 호출
                 Damaged?.Invoke();
 

@@ -24,7 +24,7 @@ namespace Unity.FPS.AI
             //    enemy.PatrolPath = this;
             //}
 
-            SpawnManager.OnSpawn += AssignPath;
+            //SpawnManager.OnSpawn += AssignPath;
         }
 
         //특정(enemy) 위치로 부터 지정된 WayPoint와의 거리 구하기
