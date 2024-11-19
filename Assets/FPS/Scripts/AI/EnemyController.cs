@@ -37,6 +37,9 @@ namespace Unity.FPS.AI
         //damamge
         public UnityAction Damaged;
 
+        //attack
+        public UnityAction OnAttack;
+
         //Sfx
         public AudioClip damageSfx;
 
@@ -89,11 +92,15 @@ namespace Unity.FPS.AI
         public int currentWeaponIndex;
         private WeaponController currentWeapon;
         private WeaponController[] weapons;
+        private EnemyManager enemyManager;
         #endregion
 
         private void Start()
         {
             //참조
+            enemyManager = GameObject.FindObjectOfType<EnemyManager>();
+            enemyManager.RegisterEnemy(this);
+
             Agent = GetComponent<NavMeshAgent>();
             actor = GetComponent<Actor>();
             selfColliders = GetComponentsInChildren<Collider>();
@@ -136,7 +143,7 @@ namespace Unity.FPS.AI
             bodyFlashMaterialPropertyBlock = new MaterialPropertyBlock();
 
             //eye
-            if(eyeRendererData.renderer)
+            if (eyeRendererData.renderer)
             {
                 eyeColorMaterialPorpertyBlock = new MaterialPropertyBlock();
                 eyeColorMaterialPorpertyBlock.SetColor("_EmissionColor", defaultEyeColor);
@@ -151,7 +158,7 @@ namespace Unity.FPS.AI
             DetectionModule.HandleTargetDetection(actor, selfColliders);
 
             //데미지 효과
-            Color currentColor = OnHitBodyGradient.Evaluate((Time.time - lastTimeDamaged)/flashOnHitDuration);
+            Color currentColor = OnHitBodyGradient.Evaluate((Time.time - lastTimeDamaged) / flashOnHitDuration);
             bodyFlashMaterialPropertyBlock.SetColor("_EmissionColor", currentColor);
             foreach (var data in bodyRenderer)
             {
@@ -164,7 +171,7 @@ namespace Unity.FPS.AI
 
         private void OnDamaged(float damage, GameObject damageSource)
         {
-            if(damageSource && damageSource.GetComponent<EnemyController>() == null)
+            if (damageSource && damageSource.GetComponent<EnemyController>() == null)
             {
                 //등록된 함수 호출
                 Damaged?.Invoke();
@@ -183,6 +190,9 @@ namespace Unity.FPS.AI
 
         private void OnDie()
         {
+            //enemyManager 리스트에서 제거
+            enemyManager.RemoveEnemy(this);
+
             //폭발 효과
             GameObject effectGo = Instantiate(deathVfxPrefab, deathVfxSpawnPostion.position, Quaternion.identity);
             Destroy(effectGo, 5f);
@@ -204,14 +214,14 @@ namespace Unity.FPS.AI
             {
                 pathDestinationIndex = 0;
                 return;
-            }                
+            }
 
             int closestWayPointIndex = 0;
             for (int i = 0; i < PatrolPath.wayPoints.Count; i++)
             {
                 float distance = PatrolPath.GetDistanceToWayPoint(transform.position, i);
                 float closestDistance = PatrolPath.GetDistanceToWayPoint(transform.position, closestWayPointIndex);
-                if(distance < closestDistance)
+                if (distance < closestDistance)
                 {
                     closestWayPointIndex = i;
                 }
@@ -223,7 +233,7 @@ namespace Unity.FPS.AI
         public Vector3 GetDestinationOnPath()
         {
             if (IsPathVaild() == false)
-            {   
+            {
                 return this.transform.position;
             }
 
@@ -233,7 +243,7 @@ namespace Unity.FPS.AI
         //목표 지점 설정 - Nav 시스템 이용
         public void SetNavDestination(Vector3 destination)
         {
-            if(Agent)
+            if (Agent)
             {
                 Agent.SetDestination(destination);
             }
@@ -247,14 +257,14 @@ namespace Unity.FPS.AI
 
             //도착판정
             float distance = (transform.position - GetDestinationOnPath()).magnitude;
-            if(distance <= pathReachingRadius)
-            {        
+            if (distance <= pathReachingRadius)
+            {
                 pathDestinationIndex = inverseOrder ? (pathDestinationIndex - 1) : (pathDestinationIndex + 1);
-                if(pathDestinationIndex < 0)
+                if (pathDestinationIndex < 0)
                 {
                     pathDestinationIndex += PatrolPath.wayPoints.Count;
                 }
-                if(pathDestinationIndex >= PatrolPath.wayPoints.Count)
+                if (pathDestinationIndex >= PatrolPath.wayPoints.Count)
                 {
                     pathDestinationIndex -= PatrolPath.wayPoints.Count;
                 }
@@ -265,7 +275,7 @@ namespace Unity.FPS.AI
         public void OrientToward(Vector3 lookPosition)
         {
             Vector3 lookDirect = Vector3.ProjectOnPlane(lookPosition - transform.position, Vector3.up).normalized;
-            if(lookDirect.sqrMagnitude != 0)
+            if (lookDirect.sqrMagnitude != 0)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(lookDirect);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, orientSpeed * Time.deltaTime);
@@ -277,7 +287,7 @@ namespace Unity.FPS.AI
         {
             OnDetectedTarget?.Invoke();
 
-            if(eyeRendererData.renderer)
+            if (eyeRendererData.renderer)
             {
                 Debug.Log("================== OnDetected");
                 eyeColorMaterialPorpertyBlock.SetColor("_EmissionColor", attackEyeColor);
@@ -305,7 +315,7 @@ namespace Unity.FPS.AI
         //가지고 있는 무기 찾고 초기화
         private void FindAndInitializeAllWeapons()
         {
-            if(weapons == null)
+            if (weapons == null)
             {
                 weapons = this.GetComponentsInChildren<WeaponController>();
 
@@ -354,9 +364,30 @@ namespace Unity.FPS.AI
         }
 
         //공격
-        public void TryAttack(Vector3 targetPosition)
+        public bool TryAttack(Vector3 targetPosition)
         {
+            //무기 교체시 딜레이 시간동안 공격 불가능
+            if (lastTimeWeaponSwapped + delayAfterWeaponSwap >= Time.time)
+            {
+                return false;
+            }
 
+            //무기 shoot
+            bool didFire = GetCurrentWeapon().HandleShootInputs(false, true, false);
+
+            if (didFire && OnAttack != null)
+            {
+                OnAttack?.Invoke();
+
+                //발사를 한번 할때 마다 다음 무기로 교체
+                if (swapToNextWeapon == true && weapons.Length > 1)
+                {
+                    int nextWeaponIndex = (currentWeaponIndex + 1) % weapons.Length;
+                    SetCurrentWeapon(nextWeaponIndex);
+                }
+            }
+
+            return true;
         }
 
     }
