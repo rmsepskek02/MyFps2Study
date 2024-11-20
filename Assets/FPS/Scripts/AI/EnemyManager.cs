@@ -18,6 +18,7 @@ namespace Unity.FPS.AI
         public GameObject fader;
         private SceneFader sencefader;
         EnemyStand es;
+        public int bossCount;
         [SerializeField] private string winScene = "WinScene";
         #endregion
 
@@ -30,7 +31,7 @@ namespace Unity.FPS.AI
         // Start is called before the first frame update
         void Start()
         {
-
+            bossCount = Enemies.Where(e => e.GetComponent<EnemyStand>() != null).Count();
         }
 
         // Update is called once per frame
@@ -50,29 +51,24 @@ namespace Unity.FPS.AI
         public void RemoveEnemy(EnemyController killedEnemy)
         {
             Enemies.Remove(killedEnemy);
-            CheckBossState();
+            bossCount = Enemies.Where(e => e.GetComponent<EnemyStand>() != null).Count();
+            CheckBossCount();
             CheckEnemyCount();
         }
 
         void CheckEnemyCount()
         {
-            if(NumberOfEnemiesRemaining <= 0)
+            if (NumberOfEnemiesRemaining <= 0)
             {
                 sencefader.FadeTo(winScene);
             }
         }
 
-        void CheckBossState()
+        void CheckBossCount()
         {
-            var missingEnemies = Enemies.Where(e => e.GetComponent<EnemyStand>() == null).ToList();
-
-            if (missingEnemies.Count == Enemies.Count)
+            if (bossCount <= 0)
             {
                 sencefader.FadeTo(winScene);
-            }
-            else
-            {
-
             }
         }
     }

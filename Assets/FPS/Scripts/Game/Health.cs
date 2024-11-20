@@ -39,7 +39,7 @@ namespace Unity.FPS.Game
         }
 
         //Èú
-        public void Heal(float amount)
+        public void Heal(float amount, GameObject healSource)
         {
             float beforeHealth = CurrentHealth;
             CurrentHealth += amount;
@@ -51,6 +51,7 @@ namespace Unity.FPS.Game
             {
                 //Èú ±¸Çö
                 OnHeal?.Invoke(realHeal);
+                Destroy(healSource);
             }
         }
 

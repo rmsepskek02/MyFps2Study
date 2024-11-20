@@ -34,7 +34,7 @@ namespace Unity.FPS.UI
             //ÂüÁ¶
             PlayerCharacterController playerCharacterController = GameObject.FindObjectOfType<PlayerCharacterController>();
 
-            playerHealth = playerCharacterController.GetComponent<Health>();
+            playerHealth = playerCharacterController.GetComponent<PlayerHealth>();
             playerHealth.OnDamaged += OnDamaged;
             playerHealth.OnHeal += OnHeal;
         }

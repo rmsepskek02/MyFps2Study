@@ -16,47 +16,21 @@ namespace Unity.FPS.AI
     /// <summary>
     /// 이동하는 Enemy의 상태들을 구현하는 클래스
     /// </summary>
-    public class EnemyMobile : MonoBehaviour
+    public class EnemyMobile : EnemyBase
     {
         #region Variables
-        public Animator animator;
-        private EnemyController enemyController;
-
         public AIMobileState AiMobileState { get; private set; }
-
-        //이동
-        public AudioClip movementSound;
-        public MinMaxFloat pitchMovenemtSpeed;
-
-        private AudioSource audioSource;
-
-        //데미지 - 이펙트
-        public ParticleSystem[] randomHitSparks;
-
-        //Detected
-        public ParticleSystem[] detectedVfxs;
-        public AudioClip detectedSfx;
-
-        //attack
-        [Range(0f,1f)]
-        public float attackSkipDistanceRatio = 0.5f;
 
         //animation parameter
         const string k_AnimAttackParameter = "Attack";
         const string k_AnimMoveSpeedParameter = "MoveSpeed";
         const string k_AnimAlertedParameter = "Alerted";
-        const string k_AnimOnDamagedParameter = "OnDamaged";
         const string k_AnimDeathParameter = "Death";
         #endregion
 
-        private void Start()
+        protected override void Start()
         {
-            //참조            
-            enemyController = GetComponent<EnemyController>();
-            enemyController.Damaged += OnDamaged;
-            enemyController.OnDetectedTarget += OnDetected;
-            enemyController.OnLostTarget += OnLost;
-            enemyController.OnAttack += Attacked;
+            base.Start();
 
             audioSource = GetComponent<AudioSource>();
             audioSource.clip = movementSound;
@@ -66,11 +40,9 @@ namespace Unity.FPS.AI
             AiMobileState = AIMobileState.Patrol;
         }
 
-        private void Update()
+        protected override void Update()
         {
-            //상태 변경/구현
-            UpdateAiMobileStateTransition();
-            UpdateCurrentAiMobileState();
+            base.Update();
 
             //속도에 따른 애니/사운드 효과
             float moveSpeed = enemyController.Agent.velocity.magnitude;
@@ -79,7 +51,7 @@ namespace Unity.FPS.AI
         }
 
         //상태에 따른 Enemy 구현
-        private void UpdateCurrentAiMobileState()
+        protected override void UpdateCurrentAiState()
         {
             switch (AiMobileState)
             {
@@ -111,7 +83,7 @@ namespace Unity.FPS.AI
         }
 
         //상태 변경에 따른 구현
-        private void UpdateAiMobileStateTransition()
+        protected override void UpdateAiStateTransition()
         {
             switch (AiMobileState)
             {
@@ -133,20 +105,12 @@ namespace Unity.FPS.AI
             }
         }
 
-        private void OnDamaged()
+        protected override void OnDamaged()
         {
-            //스파크 파티클 - 랜덤하게 하나 선택해서 플레이
-            if (randomHitSparks.Length > 0)
-            {
-                int randNum = Random.Range(0, randomHitSparks.Length);
-                randomHitSparks[randNum].Play();
-            }
-
-            //데미지 애니
-            animator.SetTrigger(k_AnimOnDamagedParameter);
+            base.OnDamaged();
         }
 
-        private void OnDetected()
+        protected override void OnDetected()
         {
             //상태 변경
             if (AiMobileState == AIMobileState.Patrol)
@@ -171,7 +135,7 @@ namespace Unity.FPS.AI
             animator.SetBool(k_AnimAlertedParameter, true);
         }
 
-        private void OnLost()
+        protected override void OnLost()
         {
             //상태변경
             if (AiMobileState == AIMobileState.Follow || AiMobileState == AIMobileState.Attack)
@@ -187,7 +151,7 @@ namespace Unity.FPS.AI
             //anim
             animator.SetBool(k_AnimAlertedParameter, false);
         }
-        private void Attacked()
+        protected override void Attacked()
         {
             //애니
             animator.SetTrigger(k_AnimAttackParameter);

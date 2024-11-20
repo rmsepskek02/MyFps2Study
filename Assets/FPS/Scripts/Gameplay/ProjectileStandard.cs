@@ -152,6 +152,15 @@ namespace Unity.FPS.Gameplay
                 return false;
             }
 
+            //affiliation이 같은 경우
+            if (hit.collider.transform.root.GetComponent<Actor>() != null)
+            {
+                if (Owner.transform.root.GetComponent<Actor>().affiliation == hit.collider.transform.root.GetComponent<Actor>().affiliation)
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 

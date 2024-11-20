@@ -14,6 +14,7 @@ namespace Unity.FPS.AI
 
         //this Path를 패트롤하는 enemy들
         public List<EnemyController> enemiesToAssign = new List<EnemyController>();
+        SpawnManager sm;
         #endregion
 
         private void Start()
@@ -23,8 +24,8 @@ namespace Unity.FPS.AI
             //{
             //    enemy.PatrolPath = this;
             //}
-
-            //SpawnManager.OnSpawn += AssignPath;
+            sm = GameObject.FindObjectOfType<SpawnManager>();
+            sm.OnSpawn += AssignPath;
         }
 
         //특정(enemy) 위치로 부터 지정된 WayPoint와의 거리 구하기

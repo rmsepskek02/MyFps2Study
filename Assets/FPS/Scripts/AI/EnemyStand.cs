@@ -12,45 +12,26 @@ namespace Unity.FPS.AI
         Detect,
         Attack
     }
-    public class EnemyStand : MonoBehaviour
+    public class EnemyStand : EnemyBase
     {
         #region Variables
-        public Animator animator;
-        private EnemyController enemyController;
-
         public AIStandState AiStandState { get; private set; }
-
-        //데미지 - 이펙트
-        public ParticleSystem[] randomHitSparks;
-
-        //Detected
-        public ParticleSystem[] detectedVfxs;
-        public AudioClip detectedSfx;
-
         const string k_AnimActiveParameter = "IsActive";
-        const string k_AnimOnDamagedParameter = "OnDamaged";
         #endregion
         // Start is called before the first frame update
-        void Start()
+        protected override void Start()
         {
-            //참조            
-            enemyController = GetComponent<EnemyController>();
-            enemyController.Damaged += OnDamaged;
-            enemyController.OnDetectedTarget += OnDetected;
-            enemyController.OnLostTarget += OnLost;
-            enemyController.OnAttack += Attacked;
+            base.Start();
         }
 
         // Update is called once per frame
-        void Update()
+        protected override void Update()
         {
-            //상태 변경/구현
-            UpdateAiStandStateTransition();
-            UpdateCurrentAiStandState();
+            base.Update();
         }
 
         //상태에 따른 Enemy 구현
-        private void UpdateCurrentAiStandState()
+        protected override void UpdateAiStateTransition()
         {
             switch (AiStandState)
             {
@@ -69,7 +50,7 @@ namespace Unity.FPS.AI
         }
 
         //상태 변경에 따른 구현
-        private void UpdateAiStandStateTransition()
+        protected override void UpdateCurrentAiState()
         {
             switch (AiStandState)
             {
@@ -90,21 +71,12 @@ namespace Unity.FPS.AI
             }
         }
 
-        private void OnDamaged()
+        protected override void OnDamaged()
         {
-            Debug.Log("TEST");
-            //스파크 파티클 - 랜덤하게 하나 선택해서 플레이
-            if (randomHitSparks.Length > 0)
-            {
-                int randNum = Random.Range(0, randomHitSparks.Length);
-                randomHitSparks[randNum].Play();
-            }
-
-            //데미지 애니
-            animator.SetTrigger(k_AnimOnDamagedParameter);
+            base.OnDamaged();
         }
 
-        private void OnDetected()
+        protected override void OnDetected()
         {
             //상태 변경
             if (AiStandState == AIStandState.Idle)
@@ -128,7 +100,7 @@ namespace Unity.FPS.AI
             animator.SetBool(k_AnimActiveParameter, true);
         }
 
-        private void OnLost()
+        protected override void OnLost()
         {
             //상태변경
             if (AiStandState == AIStandState.Detect || AiStandState == AIStandState.Attack)
@@ -144,7 +116,7 @@ namespace Unity.FPS.AI
             //anim
             animator.SetBool(k_AnimActiveParameter, false);
         }
-        private void Attacked()
+        protected override void Attacked()
         {
             //애니
             animator.SetTrigger(k_AnimActiveParameter);
